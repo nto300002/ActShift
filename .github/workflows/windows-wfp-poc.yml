@@ -20,6 +20,14 @@ jobs:
         run: cmake -S poc/windows-wfp -B poc/windows-wfp/build -G "Visual Studio 17 2022" -A x64
       - name: Build
         run: cmake --build poc/windows-wfp/build --config Release
+      - name: Verify double-click menu path
+        shell: pwsh
+        run: |
+          $exe = "poc/windows-wfp/build/Release/actshift-wfp-poc.exe"
+          $output = "0" | & $exe
+          if ($LASTEXITCODE -ne 0 -or ($output -join "`n") -notmatch "Selection:") {
+            throw "The interactive menu did not start and exit cleanly."
+          }
       - name: Record executable hash
         shell: pwsh
         run: |
