@@ -1,0 +1,26 @@
+name: Windows WFP PoC build
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "poc/windows-wfp/**"
+      - ".github/workflows/windows-wfp-poc.yml"
+  pull_request:
+    paths:
+      - "poc/windows-wfp/**"
+      - ".github/workflows/windows-wfp-poc.yml"
+
+jobs:
+  build-x64:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S poc/windows-wfp -B poc/windows-wfp/build -G "Visual Studio 17 2022" -A x64
+      - name: Build
+        run: cmake --build poc/windows-wfp/build --config Release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: actshift-wfp-poc-x64
+          path: poc/windows-wfp/build/Release/actshift-wfp-poc.exe
