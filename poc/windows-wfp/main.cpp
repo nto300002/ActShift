@@ -112,16 +112,16 @@ DWORD RemoveIfPresent(HANDLE engine, const GUID& key,
 
 DWORD RemoveObjects(HANDLE engine) {
   DWORD result = RemoveIfPresent(engine, kV4FilterKey, FwpmFilterDeleteByKey0,
-                                 FWP_E_FILTER_NOT_FOUND);
+                                 static_cast<DWORD>(FWP_E_FILTER_NOT_FOUND));
   if (result != ERROR_SUCCESS) return result;
   result = RemoveIfPresent(engine, kV6FilterKey, FwpmFilterDeleteByKey0,
-                           FWP_E_FILTER_NOT_FOUND);
+                           static_cast<DWORD>(FWP_E_FILTER_NOT_FOUND));
   if (result != ERROR_SUCCESS) return result;
   result = RemoveIfPresent(engine, kSubLayerKey, FwpmSubLayerDeleteByKey0,
-                           FWP_E_SUBLAYER_NOT_FOUND);
+                           static_cast<DWORD>(FWP_E_SUBLAYER_NOT_FOUND));
   if (result != ERROR_SUCCESS) return result;
   return RemoveIfPresent(engine, kProviderKey, FwpmProviderDeleteByKey0,
-                         FWP_E_PROVIDER_NOT_FOUND);
+                         static_cast<DWORD>(FWP_E_PROVIDER_NOT_FOUND));
 }
 
 int BlockApp(const std::wstring& path) {
@@ -242,7 +242,7 @@ int Status() {
   for (const Entry& entry : entries) {
     FWPM_FILTER0* filter = nullptr;
     const DWORD result = FwpmFilterGetByKey0(engine.Get(), entry.key, &filter);
-    if (result == FWP_E_FILTER_NOT_FOUND) {
+    if (result == static_cast<DWORD>(FWP_E_FILTER_NOT_FOUND)) {
       std::wcout << entry.name << L": not installed\n";
     } else if (result != ERROR_SUCCESS) {
       PrintError(L"FwpmFilterGetByKey0", result);
