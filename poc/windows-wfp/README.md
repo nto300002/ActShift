@@ -1,6 +1,9 @@
 # Windows WFP PoC (stage 1: native application identity)
 
-This is a small, standalone **test program**, not the ActShift application. It installs
+This is a small, standalone **test program**, not the ActShift application. When
+double-clicked it shows a text menu and stays open until you choose Exit. It
+does not run in the background; closing the window does not remove any
+previously installed persistent filter. It installs
 two persistent Windows Filtering Platform (WFP) filters at
 `FWPM_LAYER_ALE_AUTH_CONNECT_V4` and `FWPM_LAYER_ALE_AUTH_CONNECT_V6`. Both match the
 WFP application ID derived from one executable path and block its outbound
@@ -28,6 +31,15 @@ Run the resulting `poc\windows-wfp\build\Release\actshift-wfp-poc.exe`. For an
 ARM64 native binary, use `-A ARM64` with the matching MSVC/SDK components. The
 included CI build checks x64. The program uses only user-mode WFP management
 APIs; no kernel driver or browser extension is installed.
+
+The GitHub Actions x64 artifact is **unsigned**. A SmartScreen "unknown
+publisher" warning is expected for a new unsigned build and does not prove
+either that the file is safe or that it is malicious. Download only from this
+repository's successful Actions run, compare the executable's SHA-256 with the
+hash shown in that run's summary, and review the source before running it.
+Do not turn off SmartScreen for this test. If your PC's policy will not allow
+an unsigned executable, build and run the source in a controlled test
+environment instead. Code signing for wider distribution remains open.
 
 ## Safe first run
 

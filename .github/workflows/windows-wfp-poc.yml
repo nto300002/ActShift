@@ -20,7 +20,16 @@ jobs:
         run: cmake -S poc/windows-wfp -B poc/windows-wfp/build -G "Visual Studio 17 2022" -A x64
       - name: Build
         run: cmake --build poc/windows-wfp/build --config Release
+      - name: Record executable hash
+        shell: pwsh
+        run: |
+          $exe = "poc/windows-wfp/build/Release/actshift-wfp-poc.exe"
+          $hash = (Get-FileHash $exe -Algorithm SHA256).Hash
+          "SHA-256 actshift-wfp-poc.exe: $hash" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append
+          "$hash *actshift-wfp-poc.exe" | Set-Content "poc/windows-wfp/build/Release/SHA256.txt"
       - uses: actions/upload-artifact@v4
         with:
           name: actshift-wfp-poc-x64
-          path: poc/windows-wfp/build/Release/actshift-wfp-poc.exe
+          path: |
+            poc/windows-wfp/build/Release/actshift-wfp-poc.exe
+            poc/windows-wfp/build/Release/SHA256.txt

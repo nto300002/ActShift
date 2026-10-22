@@ -266,9 +266,38 @@ void Usage() {
              << L"  actshift-wfp-poc.exe remove\n";
 }
 
+int Interactive() {
+  std::wcout << L"ActShift WFP PoC - native application network test\n"
+             << L"Opening this tool does not install a filter.\n"
+             << L"This is a command-line test tool, not a background app.\n\n";
+  while (true) {
+    std::wcout << L"[1] Show filter status\n"
+               << L"[2] Block one executable's outbound traffic (administrator)\n"
+               << L"[3] Remove all ActShift PoC filters (administrator)\n"
+               << L"[0] Exit\nSelection: " << std::flush;
+    std::wstring selection;
+    if (!std::getline(std::wcin, selection)) return 0;
+    if (selection == L"0") return 0;
+    if (selection == L"1") {
+      Status();
+    } else if (selection == L"2") {
+      std::wcout << L"Full path to a disposable test .exe (no quotes): " << std::flush;
+      std::wstring path;
+      if (!std::getline(std::wcin, path)) return 0;
+      BlockApp(path);
+    } else if (selection == L"3") {
+      Remove();
+    } else {
+      std::wcout << L"Unknown selection.\n";
+    }
+    std::wcout << L"\n";
+  }
+}
+
 }  // namespace
 
 int wmain(int argc, wchar_t* argv[]) {
+  if (argc == 1) return Interactive();
   if (argc == 3 && std::wstring(argv[1]) == L"block-app") return BlockApp(argv[2]);
   if (argc == 2 && std::wstring(argv[1]) == L"status") return Status();
   if (argc == 2 && std::wstring(argv[1]) == L"remove") return Remove();
