@@ -11,5 +11,5 @@ target_compile_definitions(actshift-wfp-poc PRIVATE UNICODE _UNICODE WIN32_LEAN_
 target_link_libraries(actshift-wfp-poc PRIVATE fwpuclnt advapi32)
 
 if(MSVC)
-  target_compile_options(actshift-wfp-poc PRIVATE /W4 /WX)
+  target_compile_options(actshift-wfp-poc PRIVATE /W4 /WX /EHsc)
 endif()
